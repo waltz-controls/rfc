@@ -26,11 +26,53 @@ Describe standard message for Waltz-Controls
 
 ### Message standard [raw]
 
+Waltz message wraps any upstream endpoint messages into the following envelope:
+
 ```json
 {
-  "id":"string",
+  "id":"string|number",
+  "parent": "string|number",
   "target":"string",
   "source":"string",
+  "user":"string",
+  "action":"string",
   "payload":"object"
 }
 ```
+
+`parent` id of the parent message.
+
+`target` MAY NOT be specified in this case the system (Waltz-Controls) will do the best to deliver this message to all endpoints. Each endpoint will then act according `source` field.
+
+`user` MAY NOT be set, otherwise - username.
+
+`action` MAY NOT be specified. If specified contains arbitrary value that best express the naure of the message.
+
+Any specific upstream endpoint data MUST be parsed into JSON object and stored in `payload` field. For Tango-Controls such object is defined in TangoREST API [1]
+
+
+### Examples
+
+Tango-Controls read attribute message:
+
+```json
+{
+  "id":1234,
+  "parent":1233,
+  "source":"tango",
+  "user":"tango-cs",
+  "action":"read",
+  "payload":{
+    "host":"localhost:10000",
+    "device":"sys/tg_test/1",
+    "name":"double_scalar",
+    "value":3.14,
+    "timestamp":1234,
+    "quality":"VALID"
+  }
+}
+```
+
+### References
+
+[1] [Tango REST API](https://github.com/tango-controls/rest-api)
