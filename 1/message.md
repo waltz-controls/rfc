@@ -36,7 +36,7 @@ Waltz message wraps any upstream endpoint messages into the following envelope:
   "source":"string",
   "user":"string",
   "action":"string",
-  "payload":"object"
+  "payload":"array"
 }
 ```
 
@@ -48,7 +48,7 @@ Waltz message wraps any upstream endpoint messages into the following envelope:
 
 `action` MAY NOT be specified. If specified contains arbitrary value that best express the naure of the message.
 
-Any specific upstream endpoint data MUST be parsed into JSON object and stored in `payload` field. For Tango-Controls such object is defined in TangoREST API [1]
+Any specific upstream endpoint data MUST be parsed into JSON object(s) and stored in `payload` field. For Tango-Controls such object is defined in TangoREST API [1]
 
 
 ### Examples
@@ -62,14 +62,35 @@ Tango-Controls read attribute message:
   "source":"tango",
   "user":"tango-cs",
   "action":"read",
-  "payload":{
-    "host":"localhost:10000",
-    "device":"sys/tg_test/1",
-    "name":"double_scalar",
-    "value":3.14,
-    "timestamp":1234,
-    "quality":"VALID"
-  }
+  "payload":[
+    {
+      "host":"localhost:10000",
+      "device":"sys/tg_test/1",
+      "name":"double_scalar",
+      "value":3.14,
+      "timestamp":1234,
+      "quality":"VALID"
+   }
+ ]
+}
+```
+
+Dataforge:
+
+```json
+{
+  "id": 1235,
+  "source": "dataforge",
+  "payload":[
+    {
+      "name": "a",
+      "value": "11"
+    },
+    {
+      "name": "b",
+      "value": false
+    }
+  ]
 }
 ```
 
