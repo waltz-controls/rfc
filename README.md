@@ -28,4 +28,4 @@ check either PRs.
 
 Short Name               | Title                                                         | Status     | Editor
 -------------------------|---------------------------------------------------------------|------------|-------
-[RFC-1](1/message.md)                    | Message Standard Specification                                | Raw        | Igor Khokhriakov
+[RFC-1](1)                    | Message Standard Specification                                | Raw        | Igor Khokhriakov
