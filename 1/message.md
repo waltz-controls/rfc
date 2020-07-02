@@ -33,7 +33,7 @@ Waltz message wraps any upstream endpoint messages into the following envelope:
   "id":"string|number",
   "parent": "string|number",
   "target":"string",
-  "source":"string",
+  "origin":"string",
   "user":"string",
   "action":"string",
   "payload":"array"
@@ -42,7 +42,9 @@ Waltz message wraps any upstream endpoint messages into the following envelope:
 
 `parent` id of the parent message.
 
-`target` MAY NOT be specified in this case the system (Waltz-Controls) will do the best to deliver this message to all endpoints. Each endpoint will then act according `source` field.
+`target` MAY NOT be specified in this case the system (Waltz-Controls) will do the best to deliver this message to all endpoints. Each endpoint will then act according to  the `origin` field.
+
+`origin` MUST BE specified. Indicates a place of origin of this message e.g. `tango`, `dataforge`, `doocs` etc
 
 `user` MAY NOT be set, otherwise - username.
 
@@ -59,7 +61,7 @@ Tango-Controls read attribute message:
 {
   "id":1234,
   "parent":1233,
-  "source":"tango",
+  "origin":"tango",
   "user":"tango-cs",
   "action":"read",
   "payload":[
@@ -80,7 +82,7 @@ Dataforge:
 ```json
 {
   "id": 1235,
-  "source": "dataforge",
+  "origin": "dataforge",
   "payload":[
     {
       "name": "a",
