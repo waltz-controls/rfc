@@ -40,7 +40,7 @@ Waltz message wraps any upstream endpoint messages into the following envelope:
 }
 ```
 
-`parent` id of the parent message.
+`parent` MAY NOT be specified, otherwise is the id of the parent message. Useful to build chains of messages e.g. user reads value, gets response, executes command etc
 
 `target` MAY NOT be specified in this case the system (Waltz-Controls) will do the best to deliver this message to all endpoints. Each endpoint will then act according to  the `origin` field.
 
@@ -50,7 +50,7 @@ Waltz message wraps any upstream endpoint messages into the following envelope:
 
 `action` MAY NOT be specified. If specified contains arbitrary value that best express the naure of the message.
 
-Any specific upstream endpoint data MUST be parsed into JSON object(s) and stored in `payload` field. For Tango-Controls such object is defined in TangoREST API [1]
+Any specific upstream endpoint data MUST be serialized into JSON object(s) and stored in `payload` array. For Tango-Controls such object is defined in TangoREST API [1]
 
 
 ### Examples
