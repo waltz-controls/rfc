@@ -17,7 +17,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 ## Waltz-Controls Message Standard Specification
 
-The core feature of Waltz-Controls is ability to exchange messages bettween a number of upstream controls systems, as well as 3rd party components and GUIs.
+The core feature of Waltz-Controls is ability to exchange messages beetween a number of upstream controls systems, as well as 3rd party components and GUIs in general refered as *endpoint*s. Therefore the main idea to keep in mind when designing this message specification is the following: when a field is related to a message routing or processing it goes to the upper level, otherwise i.e. when a field is an endpoint specific it goes into payload.
 
 
 ### Goals
@@ -30,41 +30,52 @@ Waltz message wraps any upstream endpoint messages into the following envelope:
 
 ```json
 {
-  "id":"string|number",
-  "parent": "string|number",
-  "target":"string",
-  "origin":"string",
-  "user":"string",
-  "action":"string",
-  "payload":"array"
+  "id":"string|number[optional, but desired]",
+  "parentId": "string|number[optional]",
+  "target":"string[optional]",
+  "origin":"string[required]",
+  "user":"string[optional]",
+  "action":"string[optional, default='heartbeat']",
+  "payload":"object[optional]"
 }
 ```
 
-`parent` MAY NOT be specified, otherwise is the id of the parent message. Useful to build chains of messages e.g. user reads value, gets response, executes command etc
+`id` MAY NOT be specified, otherwise respresents quazi unique id of this message meaning implementation MAY NOT force uniqueness within Waltz-Controls messaging system. As first approach impelementation MAY use timestamps to set `id`.
+
+`parentId` MAY NOT be specified, otherwise is the `id` of the parent message. Useful to build chains of messages e.g. user reads value, gets response, executes command etc
 
 `target` MAY NOT be specified in this case the system (Waltz-Controls) will do the best to deliver this message to all endpoints. Each endpoint will then act according to  the `origin` field.
 
-`origin` MUST BE specified. Indicates a place of origin of this message e.g. `tango`, `dataforge`, `doocs` etc
+`origin` MUST BE specified. Indicates a place of origin of this message e.g. `tango`, `dataforge`, `doocs` etc. This field represent unique endpoint within Waltz-Controls system.
 
 `user` MAY NOT be set, otherwise - username.
 
-`action` MAY NOT be specified. If specified contains arbitrary value that best express the naure of the message.
+`action` MAY NOT be specified, then defaults to `heartbeat`. If specified contains arbitrary value that best expresses the nature of the message. Implementation MAY provide a list of supported actions e.g. [Tango-Connector](/waltz-controls/magix-tango-connector) supports `read`, `write`, `exec`, `pipe`, `subscribe`. If NOT specified implementation SHOULD set `action` to `heartbeat`
 
-Any specific upstream endpoint data MUST be serialized into JSON object(s) and stored in `payload` array. For Tango-Controls such object is defined in TangoREST API [1]
+`payload` any specific upstream endpoint data MUST be serialized into JSON object(s) and stored in the `payload` field. Payload content SHOULD be specified in a dedicated RFCs, see #6, #7, #8, #9
 
 
 ### Examples
 
-Tango-Controls read attribute message:
+Minimal valid message:
+
+```json
+{
+  "origin":"magix",
+  "action": "heartbeat"
+}
+```
+
+Tango-Controls read attribute response message:
 
 ```json
 {
   "id":1234,
-  "parent":1233,
+  "parentId":1233,
   "origin":"tango",
   "user":"tango-cs",
   "action":"read",
-  "payload":[
+  "payload":
     {
       "host":"localhost:10000",
       "device":"sys/tg_test/1",
@@ -73,26 +84,29 @@ Tango-Controls read attribute message:
       "timestamp":1234,
       "quality":"VALID"
    }
- ]
 }
 ```
 
-Dataforge:
+Dataforge write multiple properties request:
 
 ```json
 {
   "id": 1235,
-  "origin": "dataforge",
-  "payload":[
-    {
-      "name": "a",
-      "value": "11"
-    },
-    {
-      "name": "b",
-      "value": false
-    }
-  ]
+  "origin": "waltz",
+  "target": "dataforge:my-device",
+  "action": "write",
+  "payload":{
+    "device":"my-device",
+    "properties":[
+      {
+        "name": "a",
+        "value": "11"
+      },
+      {
+        "name": "b",
+        "value": false
+      }
+    ]
 }
 ```
 
