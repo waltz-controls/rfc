@@ -24,7 +24,7 @@ The core feature of Waltz-Controls is ability to exchange messages beetween a nu
 
 Describe standard API for Magix component
 
-### Magix API [raw]
+### Magix client API [raw]
 
 Magix component of Waltz-Controls MUST define the following methods
 
@@ -37,3 +37,8 @@ interface Magix {
 }
 
 ```
+
+#### Magix client implementation
+
+Magix client implementation MUST provide transparent reconnection policy
+Magix client implementation reconnection policy MAY be used to force initial connection
