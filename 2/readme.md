@@ -41,4 +41,6 @@ interface Magix {
 #### Magix client implementation
 
 Magix client implementation MUST provide transparent reconnection policy
+
+
 Magix client implementation reconnection policy MAY be used to force initial connection
