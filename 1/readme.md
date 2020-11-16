@@ -35,7 +35,6 @@ Waltz message wraps any upstream endpoint messages into the following envelope:
   "target":"string[optional]",
   "origin":"string[required]",
   "user":"string[optional]",
-  "action":"string[optional, default='heartbeat']",
   "payload":"object[optional]"
 }
 ```
@@ -50,8 +49,6 @@ Waltz message wraps any upstream endpoint messages into the following envelope:
 
 `user` MAY NOT be set, otherwise - username.
 
-`action` MAY NOT be specified, then defaults to `heartbeat`. If specified contains arbitrary value that best expresses the nature of the message. Implementation MAY provide a list of supported actions e.g. [Tango-Connector](https://github.com/waltz-controls/magix-tango-connector) supports `read`, `write`, `exec`, `pipe`, `subscribe`. If NOT specified implementation SHOULD set `action` to `heartbeat`
-
 `payload` any specific upstream endpoint data MUST be serialized into JSON object(s) and stored in the `payload` field. Payload content SHOULD be specified in a dedicated RFCs, see #6, #7, #8, #9
 
 
@@ -62,7 +59,7 @@ Minimal valid message:
 ```json
 {
   "origin":"magix",
-  "action": "heartbeat"
+  "payload": "heartbeat"
 }
 ```
 
@@ -74,9 +71,9 @@ Tango-Controls read attribute response message:
   "parentId":1233,
   "origin":"tango",
   "user":"tango-cs",
-  "action":"read",
   "payload":
     {
+      "action":"read",
       "host":"localhost:10000",
       "device":"sys/tg_test/1",
       "name":"double_scalar",
@@ -94,8 +91,8 @@ Dataforge write multiple properties request:
   "id": 1235,
   "origin": "waltz",
   "target": "dataforge:my-device",
-  "action": "write",
   "payload":{
+    "action": "write",
     "device":"my-device",
     "properties":[
       {
