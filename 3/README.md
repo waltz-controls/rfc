@@ -1,6 +1,6 @@
 ---
 shortname: 3/DF
-name: DataForge-control message standard
+name: Controls.kt message standard
 status: raw
 editor: Alexander Nozik (nozik.aa@mipt.ru)
 ---
@@ -26,41 +26,178 @@ The Envelope API does not impose limits on specific coding of meta. It is inferr
 
 ### Device message schema
 
-The device message (in JSON representation) looks following way:
+The message could correspond to several actions:
+
+* **Read**. Synchronously read a property.
+* **Write**. Synchronously write a property.
+* **Execute**. Execute an action synchronously and return a result.
+* **Information**. Request device specifications and information about properties
+
+An example device message (in JSON representation) looks the following way:
 
 ```json
 {
-  "action": "string[required]",
-  "status": "string[optional, default = 'OK']",
-  "sourceName": "string[optional]",
-  "targetName": "string[optional]",
-  "comment": "string[optional]",
-  "key": "string[required for some actions]",
-  "value": "any[required for some actions]"
+  "type": "property.changed",
+  "property": "string[required]",
+  "value": "object[required, could be null]",
+  "sourceDevice": "string[required]",
+  "targetDevice": "string[optional]",
+  "comment": "string[optional]"
 }
 ```
+* **type**: type of the message.
+* **property**: the name of the property with a changed value.
+* **value**: the generic JSON tree representing the property value. Could be null if the property is invalidated.
+* **sourceDevice**: the system (Controls.kt or DOOCS) name of the message source device.
+* **targetDevice**: the system name of the message target device.
 
-`action` describes the aim of the message. The pre-defined values are:
-* `read`. Read a property value. `key` field is required.
-* `write` Write a property value. Both `key` and `value` are required.
-* `execute` Execute an action on device. `key` field is required.
-* `propertyList` Return a key-value pair of property descriptors.
-* `actionList` Return a key-value pair of action descriptors.
+Current available messages in a serializable Kotlin format (using kotlinx-serialization schema generation) are the following:
 
-The response action follows `action.${request.action}` pattern.
-
-`status` currently supports `OK` and `FAIL` statuses. Status could be more detailed in future. A message with `FAIL` status is not required to have valid `value`.
-
-`sourceName` name of message source device node following DataForge name pattern (tokens, separated by `.`). The device name is unique within single DataForge device hub.
-
-`targetName` name of message target device node following DataForge name pattern (tokens, separated by `.`). The device name is unique within single DataForge device hub.
-
-`comment` optional message comment. Used to pass human-readable errors.
-
-`key` a property key or action name.
-
-`value` a string/boolean/number/object value used as a property value or as action argument/result.
+```kotlin
+/**
+ * Notify that property is changed. [sourceDevice] is mandatory.
+ * [property] corresponds to property name.
+ * [value] could be null if the property is invalidated.
+ *
+ */
+@Serializable
+@SerialName("property.changed")
+public data class PropertyChangedMessage(
+    public val property: String,
+    public val value: MetaItem<*>?,
+    override val sourceDevice: String,
+    override val targetDevice: String? = null,
+    override val comment: String? = null,
+) : DeviceMessage()
+ 
+/**
+ * A command to set or invalidate property. [targetDevice] is mandatory.
+ */
+@Serializable
+@SerialName("property.set")
+public data class PropertySetMessage(
+    public val property: String,
+    public val value: MetaItem<*>?,
+    override val sourceDevice: String? = null,
+    override val targetDevice: String,
+    override val comment: String? = null,
+) : DeviceMessage()
+ 
+/**
+ * A command to request property value asynchronously. [targetDevice] is mandatory.
+ * The property value should be returned asynchronously via [PropertyChangedMessage].
+ */
+@Serializable
+@SerialName("property.get")
+public data class PropertyGetMessage(
+    public val property: String,
+    override val sourceDevice: String? = null,
+    override val targetDevice: String,
+    override val comment: String? = null,
+) : DeviceMessage()
+ 
+/**
+ * Request device description. The result is returned in form of [DescriptionMessage]
+ */
+@Serializable
+@SerialName("description.get")
+public data class GetDescriptionMessage(
+    override val sourceDevice: String? = null,
+    override val targetDevice: String,
+    override val comment: String? = null,
+) : DeviceMessage()
+ 
+/**
+ * The full device description message
+ */
+@Serializable
+@SerialName("description")
+public data class DescriptionMessage(
+    val description: Meta,
+    override val sourceDevice: String,
+    override val targetDevice: String? = null,
+    override val comment: String? = null,
+) : DeviceMessage()
+ 
+/**
+ * A request to execute an action. [targetDevice] is mandatory
+ */
+@Serializable
+@SerialName("action.execute")
+public data class ActionExecuteMessage(
+    public val action: String,
+    public val argument: MetaItem<*>?,
+    override val sourceDevice: String? = null,
+    override val targetDevice: String,
+    override val comment: String? = null,
+) : DeviceMessage()
+ 
+/**
+ * Asynchronous action result. [sourceDevice] is mandatory
+ */
+@Serializable
+@SerialName("action.result")
+public data class ActionResultMessage(
+    public val action: String,
+    public val result: MetaItem<*>?,
+    override val sourceDevice: String,
+    override val targetDevice: String? = null,
+    override val comment: String? = null,
+) : DeviceMessage()
+ 
+/**
+ * Notifies listeners that a new binary with given [binaryID] is available. The binary itself could not be provided via [DeviceMessage] API.
+ */
+@Serializable
+@SerialName("binary.notification")
+public data class BinaryNotificationMessage(
+    val binaryID: String,
+    override val sourceDevice: String,
+    override val targetDevice: String? = null,
+    override val comment: String? = null,
+) : DeviceMessage()
+ 
+/**
+ * The message states that the message is received, but no meaningful response is produced.
+ * This message could be used for a heartbeat.
+ */
+@Serializable
+@SerialName("empty")
+public data class EmptyDeviceMessage(
+    override val sourceDevice: String? = null,
+    override val targetDevice: String? = null,
+    override val comment: String? = null,
+) : DeviceMessage()
+ 
+/**
+ * Information log message
+ */
+@Serializable
+@SerialName("log")
+public data class DeviceLogMessage(
+    val message: String,
+    val data: MetaItem<*>? = null,
+    override val sourceDevice: String? = null,
+    override val targetDevice: String? = null,
+    override val comment: String? = null,
+) : DeviceMessage()
+ 
+/**
+ * The evaluation of the message produced a service error
+ */
+@Serializable
+@SerialName("error")
+public data class DeviceErrorMessage(
+    public val errorMessage: String?,
+    public val errorType: String? = null,
+    public val errorStackTrace: String? = null,
+    override val sourceDevice: String,
+    override val targetDevice: String? = null,
+    override val comment: String? = null,
+) : DeviceMessage()
+```
+The `SerialName` on top of the class is converted to a type field of appropriate JSON. The kotlinx-serialization is not limited to JSON, so it is possible to encode the same structures using different formats (including binaries).
 
 ### Device message as Waltz message payload
 
-When used inside Waltz protocol, DataForge-devices are coded as Json and are put inside `payload` field (see [1](../1)). Binary part of DataForge envelope is not currently supported in Waltz.
+When used inside Waltz protocol, Controls.kt are coded as Json and are put inside `payload` field (see [1](../1)). Binary part of DataForge envelope is not currently supported in Waltz.
