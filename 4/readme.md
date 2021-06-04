@@ -38,14 +38,14 @@ General structure of the Tango-Controls payload looks like as following (optiona
   "[value]":"attribute or pipe's value",
   "[argin]":"command argin",
   "[argout]":"command argout",
-  "[quality]":"attribute's auality",
+  "[quality]":"attribute's quality",
   "errors":[]
 }
 ```
 
 Here one of the **value** and **quality** or **argin** and **argout** combinations must be included.
-Here **value** and **quality** are if **action** is **read** or **write** or **pipe**.
-Here **argin** and **argout** are if **action** is **exec**.
+**value** and **quality** are if **action** is **read** or **write** or **pipe**.
+**argin** and **argout** are if **action** is **exec**.
 
 Errors array element structure:
 
