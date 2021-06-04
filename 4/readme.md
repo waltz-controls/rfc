@@ -43,6 +43,10 @@ General structure of the Tango-Controls payload looks like as following (optiona
 }
 ```
 
+Here one of the **value** and **quality** or **argin** and **argout** combinations must be included.
+Here **value** and **quality** are if **action** is **read** or **write** or **pipe**.
+Here **argin** and **argout** are if **action** is **exec**.
+
 Errors array element structure:
 
 ```json
@@ -52,10 +56,6 @@ Errors array element structure:
   "severity":"PANIC|ALARM|WARNING",
 }
 ```
-
-
-Here **value** and **quality** are if **action** is **read** or **write** or **pipe**.
-Here **argin** and **argout** are if **action** is **exec**.
 
 For the envelope structure, please refer to [RFC-1](1/readme.md)
 
