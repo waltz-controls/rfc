@@ -34,7 +34,7 @@ Waltz message wraps any upstream endpoint messages into the following envelope:
   "parentId": "string|number[optional]",
   "target":"string[optional]",
   "origin":"string[required]",
-  "user":"string[optional]",
+  "user":"object[optional]",
   "payload":"object[optional]"
 }
 ```
@@ -47,7 +47,15 @@ Waltz message wraps any upstream endpoint messages into the following envelope:
 
 `origin` MUST BE specified. Indicates a place of origin of this message e.g. `tango`, `dataforge`, `doocs` etc. This field represent unique endpoint within Waltz-Controls system.
 
-`user` MAY NOT be set, otherwise - username.
+`user` MAY NOT be set, otherwise - the following structure:
+
+```json
+{
+  "name":"string",
+  "auth":"OAuth2|Basic|Token",
+  "password":"string"
+}
+```
 
 `payload` any specific upstream endpoint data MUST be serialized into JSON object(s) and stored in the `payload` field. Payload content SHOULD be specified in a dedicated RFCs, see #6, #7, #8, #9
 
