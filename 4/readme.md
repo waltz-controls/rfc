@@ -35,18 +35,50 @@ General structure of the Tango-Controls payload looks like as following (optiona
   "host":"tango_host",
   "device":"device name",
   "name":"attribute, command or pipe's name",
-  "[value]":"attribute or pipe's value",
+  "[value]":"attribute's value",
+  "[quality]":"VALID|WARNING|ALARM",
   "[argin]":"command argin",
   "[argout]":"command argout",
-  "[quality]":"VALID|WARNING|ALARM",
-  "errors":[]
+  "[data]":"pipe's data",
+  "[errors]":[]
 }
 ```
 
-Here one of the **value** and **quality** or **argin** and **argout** combinations must be included.
-**value** and **quality** are if **action** is **read** or **write** or **pipe**.
-**argin** and **argout** are if **action** is **exec**.
+Here one of the **value** and **quality** or **argin** and **argout** or **data** combinations must be included if action is either **write**, **exec** or **pipe**.
+**value** and **quality** are if action is **read** or **write**.
+**argin** and **argout** are if action is **exec**.
+**data** -- if action is **pipe**
 
+Omitting **value** and **quality** fields implies reading an attribute action.
+
+In case of a **pipe** action the data should look like this:
+
+```json
+[
+      {
+        "name": "FirstDE",
+        "value": [
+          "The string"
+        ]
+      },
+      {
+        "name": "SecondDE",
+        "value": [
+          666
+        ]
+      },
+      {
+        "name": "ThirdDE",
+        "value": [
+          12
+        ]
+      }
+    ]
+```    
+
+Omitting **data** field in the **pipe** action imples reading otherwise -- writing to the pipe.
+
+In case of en error any optional field may be omitted while the **errors** field must be present.
 Errors array element structure:
 
 ```json
