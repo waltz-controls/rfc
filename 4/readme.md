@@ -26,7 +26,7 @@ Describe standard message for Tango-Controls within Waltz-Controls eco-system
 
 ### Message standard [raw]
 
-General structure of the Tango-Controls payload looks like as following:
+General structure of the Tango-Controls payload looks like as following (optional fields are in square brackets):
 
 ```json
 {
