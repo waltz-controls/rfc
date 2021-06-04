@@ -38,7 +38,7 @@ General structure of the Tango-Controls payload looks like as following (optiona
   "[value]":"attribute or pipe's value",
   "[argin]":"command argin",
   "[argout]":"command argout",
-  "[quality]":"attribute's quality",
+  "[quality]":"VALID|WARNING|ALARM",
   "errors":[]
 }
 ```
