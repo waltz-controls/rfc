@@ -57,7 +57,7 @@ Errors array element structure:
 }
 ```
 
-For the envelope structure, please refer to [RFC-1](../1/readme.md)
+For the envelope structure, please refer to [RFC-1](../1/README.md)
 
 ### Examples
 
