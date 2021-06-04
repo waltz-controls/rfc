@@ -117,6 +117,7 @@ Tango-Controls read attribute full response message:
 ### Implementation notes
 
 Implementation SHOULD return **null** if upstream value is null.
+
 Implementation SHOULD return **undefined** or omit a field if upstream value is undefined e.g. void command argout.
 
 ### References
