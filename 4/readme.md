@@ -1,6 +1,6 @@
 ---
-shortname: 1/MSG
-name: Waltz-Controls Message Standard
+shortname: 4/TANGO
+name: Tango-Controls Message Standard
 status: raw
 editor: Igor Khokhriakov (igor.khokhriakov@hzg.de)
 ---
