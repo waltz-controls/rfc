@@ -31,3 +31,4 @@ Short Name               | Title                                                
 [RFC-1](1)                    | Message Standard Specification                                | Raw        | Igor Khokhriakov
 [RFC-2](2)                    | Message Exchanging Specification                               | Raw        | Igor Khokhriakov
 [RFC-3](3)                    | Controls.kt specification                                | Raw        | Alexander Nozik
+[RFC-4](4)                    | Tango-Controls specification                                | Raw        | Igor Khokhriakov
