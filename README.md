@@ -15,7 +15,7 @@ each on a sufficient level for future evolution of Waltz Controls and/or impleme
 
 
 ## Contribution
-
+[]()
 The process to add or change an RFC is the following:
 
 - An RFC is created and modified by pull requests according to the Collective Code Construction Contract [(C4)](https://github.com/unprotocols/rfc/blob/master/1/README.md).
