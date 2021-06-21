@@ -26,20 +26,20 @@ Describe standard message for DOOCS within Waltz-Controls eco-system
 
 ### Message standard \[raw\]
 
-General structure of the Tango-Controls payload looks like as following (optional fields are in square brackets):
+General structure of the DOOCS payload looks like as following (optional fields are in square brackets):
 
 ```json
 {
   "action":"get|set",
   "eq_address": "string",
   "eq_data": {
-    "type_id": "int[required]",
-    "type": "string[optional]",
+    "type_id": "int",
+    "type": "[string]",
     "value": "object|value",
-    "event_id": "int[optional]",
-    "error": "int[optional]",
-    "time": "long[optional]",
-    "message": "string[optional]"
+    "event_id": "[int]",
+    "error": "[int]",
+    "time": "[long]",
+    "comment": "[string]"
   }
 }
 ```
@@ -52,7 +52,7 @@ General structure of the Tango-Controls payload looks like as following (optiona
   * `event_id` - DOOCS `EventId` if present
   * `error` - DOOCS error code if present
   * `time` - DOOCS timestamp if present
-  * `message` - a human-readable debug message. Is not passed to DOOCS
+  * `comment` - a human-readable debug message. Is not passed to DOOCS
 
 
 ### References
