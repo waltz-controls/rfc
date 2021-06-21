@@ -32,3 +32,4 @@ Short Name               | Title                                                
 [RFC-2](2)                    | Message Exchanging Specification                               | Raw        | Igor Khokhriakov
 [RFC-3](3)                    | Controls.kt specification                                | Raw        | Alexander Nozik
 [RFC-4](4)                    | Tango-Controls specification                                | Raw        | Igor Khokhriakov
+[RFC-5](5)                    | DOOCS message specification                             | Raw        | Alexander Nozik
