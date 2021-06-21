@@ -31,9 +31,10 @@ Waltz message wraps any upstream endpoint messages into the following envelope:
 ```json
 {
   "id":"string|number[optional, but desired]",
+  "origin":"string[required]",
+  "format":"string[optional, but desired]",
   "parentId": "string|number[optional]",
   "target":"string[optional]",
-  "origin":"string[required]",
   "user":"object[optional]",
   "payload":"object[optional]"
 }
@@ -45,7 +46,9 @@ Waltz message wraps any upstream endpoint messages into the following envelope:
 
 `target` MAY NOT be specified in this case the system (Waltz-Controls) will do the best to deliver this message to all endpoints. Each endpoint will then act according to  the `origin` field.
 
-`origin` MUST BE specified. Indicates a place of origin of this message e.g. `tango`, `dataforge`, `doocs` etc. This field represent unique endpoint within Waltz-Controls system.
+`origin` MUST BE specified. Indicates a place of origin of this message e.g. `tango`, `dataforge`, `doocs` etc. This field represents unique endpoint within Waltz-Controls system.
+
+`format` MAY NOT be set specified in this case considered to be the same as `origin`. Specifies the format of payload block. Useful in case multiple endpoints with the same type connected to the loop.
 
 `user` MAY NOT be set, otherwise - the following structure:
 
@@ -92,26 +95,21 @@ Tango-Controls read attribute response message:
 }
 ```
 
-Dataforge write multiple properties request:
+Controls.kt write property:
 
 ```json
 {
   "id": 1235,
   "origin": "waltz",
-  "target": "dataforge:my-device",
+  "format": "dataforge",
+  "target": "192.168.111.132:8882",
   "payload":{
-    "action": "write",
-    "device":"my-device",
-    "properties":[
-      {
-        "name": "a",
-        "value": "11"
-      },
-      {
-        "name": "b",
-        "value": false
-      }
-    ]
+    "type": "property.set",
+    "targetDevice":"my-device",
+    "property": "a",
+    "value": 11,
+    "comment": "pretty please!"
+  }
 }
 ```
 
