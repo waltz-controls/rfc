@@ -32,3 +32,4 @@ Short Name               | Title                                                
 [RFC-3](3)                    | Controls.kt specification                                | Raw        | Alexander Nozik
 [RFC-4](4)                    | Tango-Controls specification                                | Raw        | Igor Khokhriakov
 [RFC-5](5)                    | DOOCS message specification                             | Raw        | Alexander Nozik
+[RFC-6](6)                    | AXSIS XES slow control system message specification                             | Raw        | Igor Khokhriakov 
