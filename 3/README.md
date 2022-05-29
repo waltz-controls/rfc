@@ -42,14 +42,16 @@ An example device message (in JSON representation) looks the following way:
   "value": "object[required, could be null]",
   "sourceDevice": "string[required]",
   "targetDevice": "string[optional]",
+  "time": "string[optional]",
   "comment": "string[optional]"
 }
 ```
 * **type**: type of the message.
 * **property**: the name of the property with a changed value.
 * **value**: the generic JSON tree representing the property value. Could be null if the property is invalidated.
-* **sourceDevice**: the system (Controls.kt or DOOCS) name of the message source device.
-* **targetDevice**: the system name of the message target device.
+* **sourceDevice**: the name of the message source device inside the device hub.
+* **targetDevice**: the name of the message target device inside the device hub.
+* **time**: the time of event creation encoded using [ISO-8601](https://en.wikipedia.org/wiki/ISO_8601) representation
 
 Current available messages in a serializable Kotlin format (using kotlinx-serialization schema generation) are the following:
 
@@ -65,9 +67,7 @@ Current available messages in a serializable Kotlin format (using kotlinx-serial
 public data class PropertyChangedMessage(
     public val property: String,
     public val value: MetaItem<*>?,
-    override val sourceDevice: String,
-    override val targetDevice: String? = null,
-    override val comment: String? = null,
+    // common parameters
 ) : DeviceMessage()
  
 /**
@@ -78,9 +78,7 @@ public data class PropertyChangedMessage(
 public data class PropertySetMessage(
     public val property: String,
     public val value: MetaItem<*>?,
-    override val sourceDevice: String? = null,
-    override val targetDevice: String,
-    override val comment: String? = null,
+    // common parameters
 ) : DeviceMessage()
  
 /**
@@ -91,9 +89,7 @@ public data class PropertySetMessage(
 @SerialName("property.get")
 public data class PropertyGetMessage(
     public val property: String,
-    override val sourceDevice: String? = null,
-    override val targetDevice: String,
-    override val comment: String? = null,
+    // common parameters
 ) : DeviceMessage()
  
 /**
@@ -102,9 +98,8 @@ public data class PropertyGetMessage(
 @Serializable
 @SerialName("description.get")
 public data class GetDescriptionMessage(
-    override val sourceDevice: String? = null,
     override val targetDevice: String,
-    override val comment: String? = null,
+    // common parameters
 ) : DeviceMessage()
  
 /**
@@ -114,9 +109,7 @@ public data class GetDescriptionMessage(
 @SerialName("description")
 public data class DescriptionMessage(
     val description: Meta,
-    override val sourceDevice: String,
-    override val targetDevice: String? = null,
-    override val comment: String? = null,
+    // common parameters
 ) : DeviceMessage()
  
 /**
@@ -127,9 +120,8 @@ public data class DescriptionMessage(
 public data class ActionExecuteMessage(
     public val action: String,
     public val argument: MetaItem<*>?,
-    override val sourceDevice: String? = null,
     override val targetDevice: String,
-    override val comment: String? = null,
+    // common parameters
 ) : DeviceMessage()
  
 /**
@@ -141,8 +133,7 @@ public data class ActionResultMessage(
     public val action: String,
     public val result: MetaItem<*>?,
     override val sourceDevice: String,
-    override val targetDevice: String? = null,
-    override val comment: String? = null,
+    // common parameters
 ) : DeviceMessage()
  
 /**
@@ -164,9 +155,7 @@ public data class BinaryNotificationMessage(
 @Serializable
 @SerialName("empty")
 public data class EmptyDeviceMessage(
-    override val sourceDevice: String? = null,
-    override val targetDevice: String? = null,
-    override val comment: String? = null,
+    // common parameters
 ) : DeviceMessage()
  
 /**
@@ -177,9 +166,7 @@ public data class EmptyDeviceMessage(
 public data class DeviceLogMessage(
     val message: String,
     val data: MetaItem<*>? = null,
-    override val sourceDevice: String? = null,
-    override val targetDevice: String? = null,
-    override val comment: String? = null,
+    // common parameters
 ) : DeviceMessage()
  
 /**
@@ -192,11 +179,10 @@ public data class DeviceErrorMessage(
     public val errorType: String? = null,
     public val errorStackTrace: String? = null,
     override val sourceDevice: String,
-    override val targetDevice: String? = null,
-    override val comment: String? = null,
+    // common parameters
 ) : DeviceMessage()
 ```
-The `SerialName` on top of the class is converted to a type field of appropriate JSON. The kotlinx-serialization is not limited to JSON, so it is possible to encode the same structures using different formats (including binaries).
+The `SerialName` on top of the class is converted to a `type` field of appropriate JSON. The kotlinx-serialization is not limited to JSON, so it is possible to encode the same structures using different formats (including binaries).
 
 ### Device message as Waltz message payload
 
