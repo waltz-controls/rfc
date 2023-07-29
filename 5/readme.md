@@ -2,7 +2,7 @@
 shortname: 5/DOOCS
 name: DOOCS Message Standard
 status: raw
-editor: Alexander Nozik (nozik.aa@mipt.ru)
+editor: Alexander Nozik (altavir@gmail.com)
 ---
 
 ## Preamble
