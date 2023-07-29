@@ -32,11 +32,11 @@ All the messages MUST be sent inside `axsis-xes` channel
 
 **origin**
 
-AXSIS XES backend MUST respond with `"origin": "axsis"`
+AXSIS XES backend MUST respond with `"sourceEndpoint": "axsis"`
 
-AXSIS XES GUI MAY respond with `"origin":"axsis-gui"`
+AXSIS XES GUI MAY respond with `"sourceEndpoint":"axsis-gui"`
 
-AXSIS XES virtual Tango host/server MAY respond with `"origin":"axsis-tango"`
+AXSIS XES virtual Tango host/server MAY respond with `"sourceEndpoint":"axsis-tango"`
 
 **payload**
 
@@ -60,8 +60,8 @@ Sending MOV command to a PI controller:
 ```json
 {
   "id":1636791022543,
-  "origin":"axsis-gui",
-  "target":"axsis",
+  "sourceEndpoint":"axsis-gui",
+  "targetEndpoint":"axsis",
   "payload": {
     "ip":"192.168.0.103",
     "port":50000,

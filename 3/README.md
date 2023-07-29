@@ -1,8 +1,8 @@
 ---
 shortname: 3/DF
-name: Controls.kt message standard
+name: Controls-kt message standard
 status: raw
-editor: Alexander Nozik (nozik.aa@mipt.ru)
+editor: Alexander Nozik (altavir@gmail.com)
 ---
 
 ## Preamble
@@ -14,15 +14,6 @@ This Specification is free software; you can redistribute it and/or modify it un
 This Specification is a [free and open standard](http://www.digistan.org/open-standard:definition) and is governed by the Digital Standards Organization's [Consensus-Oriented Specification System](http://www.digistan.org/spec:1/COSS).
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in [RFC 2119](http://tools.ietf.org/html/rfc2119).
-
-
-### Envelope API
-
-The DataForge device message follows the DataForge Envelope API and in general could contain two parts:
-1. Human-readable value tree called meta
-2. A binary block called data
-
-The Envelope API does not impose limits on specific coding of meta. It is inferred based on specific transport protocol.
 
 ### Device message schema
 
@@ -184,6 +175,6 @@ public data class DeviceErrorMessage(
 ```
 The `SerialName` on top of the class is converted to a `type` field of appropriate JSON. The kotlinx-serialization is not limited to JSON, so it is possible to encode the same structures using different formats (including binaries).
 
-### Device message as Waltz message payload
+### Device message as Magix message payload
 
-When used inside Waltz protocol, Controls.kt are coded as Json and are put inside `payload` field (see [1](../1)). Binary part of DataForge envelope is not currently supported in Waltz.
+When used inside Magix protocol, Controls-kt are coded as Json and are put inside `payload` field (see [1](../1)). 
