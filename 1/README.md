@@ -31,10 +31,10 @@ Waltz message wraps any upstream endpoint messages into the following envelope:
 ```json
 {
   "id":"string|number[optional, but desired]",
-  "origin":"string[required]",
+  "sourceEndpoint":"string[required]",
   "format":"string[optional, but desired]",
   "parentId": "string|number[optional]",
-  "target":"string[optional]",
+  "targetEndpoint":"string[optional]",
   "user":"object[optional]",
   "payload":"object[optional]"
 }
@@ -44,21 +44,22 @@ Waltz message wraps any upstream endpoint messages into the following envelope:
 
 `parentId` MAY NOT be specified, otherwise is the `id` of the parent message. Useful to build chains of messages e.g. user reads value, gets response, executes command etc
 
-`target` MAY NOT be specified in this case the system (Waltz-Controls) will do the best to deliver this message to all endpoints. Each endpoint will then act according to  the `origin` field.
+`targetEndpoint` MAY NOT be specified in this case the system (Magix) will do the best to deliver this message to all endpoints. Each endpoint will then act according to  the `sourceEndpoint` field.
 
-`origin` MUST BE specified. Indicates a place of origin of this message e.g. `tango`, `dataforge`, `doocs` etc. This field represents unique endpoint within Waltz-Controls system.
+`sourceEndpoint` MUST BE specified. Indicates a place of origin of this message e.g. `tango`, `controls-kt`, `doocs` etc. This field represents unique endpoint within Waltz-Controls system.
 
 `format` MAY NOT be set specified in this case considered to be the same as `origin`. Specifies the format of payload block. Useful in case multiple endpoints with the same type connected to the loop.
 
-`user` MAY NOT be set, otherwise - the following structure:
+`user` MAY NOT be set, otherwise is a string that corresponds to the user name or the following structure:
 
 ```json
 {
-  "name":"string",
-  "auth":"OAuth2|Basic|Token",
-  "password":"string"
+  "name":"string[required]",
+  "auth":"OAuth2|Basic|Token[optional]",
+  "password":"string[optional]"
 }
 ```
+Specifies security information for the message. Additional fields could be added in further RFCs.
 
 `payload` any specific upstream endpoint data MUST be serialized into JSON object(s) and stored in the `payload` field. Payload content SHOULD be specified in a dedicated RFCs, see #6, #7, #8, #9
 
@@ -69,7 +70,7 @@ Minimal valid message:
 
 ```json
 {
-  "origin":"magix",
+  "sourceEndpoint":"magix",
   "payload": "heartbeat"
 }
 ```
@@ -80,7 +81,7 @@ Tango-Controls read attribute response message:
 {
   "id":1234,
   "parentId":1233,
-  "origin":"tango",
+  "sourceEndpoint":"tango",
   "user":"tango-cs",
   "payload":
     {
@@ -95,14 +96,14 @@ Tango-Controls read attribute response message:
 }
 ```
 
-Controls.kt write property:
+Controls-kt write property:
 
 ```json
 {
   "id": 1235,
-  "origin": "waltz",
-  "format": "dataforge",
-  "target": "192.168.111.132:8882",
+  "sourceEndpoint": "waltz",
+  "format": "controls-kt",
+  "targetEndpoint": "dataforge",
   "payload":{
     "type": "property.set",
     "targetDevice":"my-device",
